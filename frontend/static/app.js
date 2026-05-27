@@ -711,17 +711,19 @@ function showResultsWriting(res, userResponse) {
   const hSum = document.createElement("h3");
   hSum.textContent = "Summary";
   fb.appendChild(hSum);
-  const sum = res.summarised_correction;
+  // API shape (current): { feedback: WritingSummary, corrections: TextCorrection }
+  // Older UI experiments used: { summarised_correction, detailed_correction }
+  const sum = res?.feedback ?? res?.summarised_correction ?? null;
   fb.appendChild(
     elBlock(
       [
-        sum.general_feedback,
+        sum?.general_feedback ?? "",
         "",
-        sum.tense_edits,
+        sum?.tense_edits ?? "",
         "",
-        sum.grammar_edits,
+        sum?.grammar_edits ?? "",
         "",
-        sum.topic_edits,
+        sum?.topic_edits ?? "",
       ].join("\n"),
     ),
   );
@@ -731,21 +733,21 @@ function showResultsWriting(res, userResponse) {
   fb.appendChild(hUser);
   fb.appendChild(elBlock(userResponse ?? ""));
 
-  const dc = res.detailed_correction;
+  const dc = res?.corrections ?? res?.detailed_correction ?? null;
   const hCorr = document.createElement("h3");
   hCorr.textContent = "Corrected version";
   fb.appendChild(hCorr);
-  fb.appendChild(elBlock(dc.corrected_version || ""));
+  fb.appendChild(elBlock(dc?.corrected_version || ""));
 
   const hDetail = document.createElement("h3");
   hDetail.textContent = "Corrections in detail";
   fb.appendChild(hDetail);
   const detailWrap = document.createElement("div");
-  appendEditSection(detailWrap, "Verb tenses", dc.tense_errors);
-  appendEditSection(detailWrap, "Grammar", dc.grammar_errors);
-  appendEditSection(detailWrap, "Topic / vocabulary", dc.topic_errors);
-  appendEditSection(detailWrap, "Typos & small fixes", dc.typos);
-  appendEditSection(detailWrap, "Other", dc.other_mistakes);
+  appendEditSection(detailWrap, "Verb tenses", dc?.tense_errors);
+  appendEditSection(detailWrap, "Grammar", dc?.grammar_errors);
+  appendEditSection(detailWrap, "Topic / vocabulary", dc?.topic_errors);
+  appendEditSection(detailWrap, "Typos & small fixes", dc?.typos);
+  appendEditSection(detailWrap, "Other", dc?.other_mistakes);
   if (!detailWrap.children.length) {
     const empty = document.createElement("p");
     empty.className = "hint";
