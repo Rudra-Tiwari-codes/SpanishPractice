@@ -6,6 +6,23 @@ from typing import Any, Type, get_args, get_origin
 from pydantic import BaseModel
 
 
+def _to_prompt_jsonable(value: Any) -> Any:
+    """Convert nested values into something json.dumps can handle."""
+    if value is None:
+        return None
+
+    if isinstance(value, BaseModel):
+        return value.model_dump()
+
+    if isinstance(value, dict):
+        return {str(k): _to_prompt_jsonable(v) for k, v in value.items()}
+
+    if isinstance(value, (list, tuple, set)):
+        return [_to_prompt_jsonable(v) for v in value]
+
+    return value
+
+
 def serialise_for_prompt(value) -> str:
     if value is None:
         return ""
@@ -14,7 +31,7 @@ def serialise_for_prompt(value) -> str:
         return json.dumps(value.model_dump(), indent=2, ensure_ascii=False)
 
     if isinstance(value, (dict, list)):
-        return json.dumps(value, indent=2, ensure_ascii=False)
+        return json.dumps(_to_prompt_jsonable(value), indent=2, ensure_ascii=False)
 
     return str(value)
 
