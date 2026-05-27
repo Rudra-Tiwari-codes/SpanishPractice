@@ -5,8 +5,15 @@ from pydantic import BaseModel
 from src.domain.models.exercise import ExerciseContext
 from src.infrastructure.llm.contracts.reading import ReadingGeneration
 
-LLMStimulus = Union[ReadingGeneration,list[str], str]
-LLMInput = Union[str, list[str], ]
+LLMStimulus = Union[
+    # structured objects (e.g. ReadingGeneration, TextCorrection, Progress)
+    BaseModel,
+    list[BaseModel],
+    # simple prompt text
+    str,
+    list[str],
+]
+LLMInput = Union[str, list[str]]
     
 class ModelInputs(BaseModel):
     model_name: str
