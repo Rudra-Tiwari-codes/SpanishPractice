@@ -1,6 +1,6 @@
 from src.infrastructure.llm.contracts.shared import AgentNames
 from src.domain.models.exercise import ExerciseContext
-from src.infrastructure.llm.utils import model_schema_as_json
+from src.infrastructure.llm.utils import model_prompt_example_as_json, model_schema_as_json
 from src.domain.models.progress import Progress
 from src.domain.enums import Tenses, Grammar, Topics
 from src.infrastructure.llm.contracts.text_correction import TextCorrection
@@ -36,6 +36,10 @@ EXAMPLE INPUT:
 
 {model_schema_as_json(ExerciseContext)}
 
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
+
 EXAMPLE OUTPUT:
 Escribe un texto de aproximadamente 160 palabras sobre un viaje importante y las emociones que sentiste, situándolo en un aeropuerto extranjero durante una despedida difícil con un ser querido.
 
@@ -49,6 +53,10 @@ Your task is to analyse a student's Spanish text and return ONLY a JSON object.
 
 OUTPUT:
 {model_schema_as_json(Progress)}
+
+Example JSON:
+
+{model_prompt_example_as_json(Progress)}
 
 Each top-level key must map to an object containing every required enum key exactly as written below.
 
@@ -183,6 +191,10 @@ You must return:
 
 {model_schema_as_json(TextCorrection)}
 
+Example JSON:
+
+{model_prompt_example_as_json(TextCorrection)}
+
 Classification rules:
 
 1. tense_errors
@@ -249,6 +261,10 @@ Your task is to take structured correction data (lists of edits and scoring info
 INPUT:
 {model_schema_as_json(TextCorrection)}
 
+Example JSON:
+
+{model_prompt_example_as_json(TextCorrection)}
+
 Your job:
 - Do NOT repeat every individual correction.
 - Identify patterns and common mistakes.
@@ -257,6 +273,10 @@ Your job:
 You must return output in this exact schema:
 
 {model_schema_as_json(WritingSummary)}
+
+Example JSON:
+
+{model_prompt_example_as_json(WritingSummary)}
 
 How to summarise each section:
 

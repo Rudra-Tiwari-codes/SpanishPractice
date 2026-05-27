@@ -1,7 +1,7 @@
 from src.domain.enums import DrillTypes
 from src.domain.models.exercise import ExerciseContext
 from src.infrastructure.llm.contracts.drills import DrillSet, DrillMarkingSet
-from src.infrastructure.llm.utils import model_schema_as_json
+from src.infrastructure.llm.utils import model_prompt_example_as_json, model_schema_as_json
 
 d_sentence_complete_generator_system_prompt =f"""
 You are a Spanish drill generation system.
@@ -14,6 +14,10 @@ You must return JSON that exactly matches this structure:
 
 {model_schema_as_json(DrillSet)}
 
+Example JSON:
+
+{model_prompt_example_as_json(DrillSet)}
+
 INPUTS
 
 You will receive:
@@ -21,6 +25,26 @@ You will receive:
 1. exercise_context, formatted like this:
 
 {model_schema_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
 
 Only one of:
 - topics
@@ -161,6 +185,10 @@ You must return JSON that exactly matches this structure:
 
 {model_schema_as_json(DrillSet)}
 
+Example JSON:
+
+{model_prompt_example_as_json(DrillSet)}
+
 INPUTS
 
 You will receive:
@@ -168,6 +196,10 @@ You will receive:
 1. exercise_context, formatted like this:
 
 {model_schema_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
 
 Only one of:
 - topics
@@ -306,6 +338,10 @@ You must return JSON that exactly matches this structure:
 
 {model_schema_as_json(DrillSet)}
 
+Example JSON:
+
+{model_prompt_example_as_json(DrillSet)}
+
 INPUTS
 
 You will receive:
@@ -313,6 +349,10 @@ You will receive:
 1. exercise_context, formatted like this:
 
 {model_schema_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
 
 Only one of:
 - topics
@@ -442,6 +482,10 @@ You must return JSON that exactly matches this structure:
 
 {model_schema_as_json(DrillSet)}
 
+Example JSON:
+
+{model_prompt_example_as_json(DrillSet)}
+
 INPUTS
 
 You will receive:
@@ -449,6 +493,10 @@ You will receive:
 1. exercise_context, formatted like this:
 
 {model_schema_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
 
 Only one of:
 - topics
@@ -600,6 +648,10 @@ word_count must be ignored.
 
 {model_schema_as_json(DrillSet)}  
 
+Example JSON:
+
+{model_prompt_example_as_json(DrillSet)}
+
 3. user responses as a list of strings.
 Each response corresponds by index to the drill in the input DrillSet.
 
@@ -608,6 +660,10 @@ OUTPUT SCHEMA
 Return exactly one DrillMarkingSet:
 
 {model_schema_as_json(DrillMarkingSet)}
+
+Example JSON:
+
+{model_prompt_example_as_json(DrillMarkingSet)}
 
 TASK
 
@@ -683,6 +739,18 @@ word_count must be ignored.
 
 {model_schema_as_json(DrillSet)}
 
+Example JSON:
+
+{model_prompt_example_as_json(DrillSet)}
+
+Example JSON:
+
+{model_prompt_example_as_json(DrillSet)}
+
+Example JSON:
+
+{model_prompt_example_as_json(DrillSet)}
+
 3. user responses as a list of strings.
 Each response corresponds by index to the drill in the input DrillSet.
 
@@ -691,6 +759,18 @@ OUTPUT SCHEMA
 Return exactly one DrillMarkingSet:
 
 {model_schema_as_json(DrillMarkingSet)}
+
+Example JSON:
+
+{model_prompt_example_as_json(DrillMarkingSet)}
+
+Example JSON:
+
+{model_prompt_example_as_json(DrillMarkingSet)}
+
+Example JSON:
+
+{model_prompt_example_as_json(DrillMarkingSet)}
 
 TASK
 

@@ -1,4 +1,4 @@
-from src.infrastructure.llm.utils import model_schema_as_json
+from src.infrastructure.llm.utils import model_prompt_example_as_json, model_schema_as_json
 from src.domain.models.exercise import ExerciseContext
 from src.infrastructure.llm.contracts.reading import ReadingGeneration, TextCorrections, QuestionMarking
 from src.domain.enums import Tenses, Grammar, Topics
@@ -16,11 +16,19 @@ OUTPUT:
 
 {model_schema_as_json(ReadingGeneration)}
 
+Example JSON:
+
+{model_prompt_example_as_json(ReadingGeneration)}
+
 Do not include any extra keys. Do not include any text outside the JSON.
 
 INPUT:
 
 {model_schema_as_json(ExerciseContext)}
+
+Example JSON:
+
+{model_prompt_example_as_json(ExerciseContext)}
 
 REQUIREMENTS
 
@@ -77,6 +85,10 @@ Your task is to analyse multiple student-written responses in Spanish and return
 OUTPUT:
 
 {model_schema_as_json(Progress)}
+
+Example JSON:
+
+{model_prompt_example_as_json(Progress)}
 
 You will receive:
 - user_text: a list of the student's written responses
@@ -243,6 +255,10 @@ Return JSON with this exact top-level shape:
 
 {model_schema_as_json(TextCorrections)}
 
+Example JSON:
+
+{model_prompt_example_as_json(TextCorrections)}
+
 Each correction object corresponds to exactly one user response.
 
 Interpret the fields as follows:
@@ -330,8 +346,12 @@ INPUTS
 
 You will receive:
 1. {model_schema_as_json(ReadingGeneration)}
+   Example JSON:
+   {model_prompt_example_as_json(ReadingGeneration)}
 2. The student's answers: list of strings
 3. {model_schema_as_json(ExerciseContext)}
+   Example JSON:
+   {model_prompt_example_as_json(ExerciseContext)}
 
 These inputs may be provided as a JSON object whose fields contain strings or lists of strings. Treat all fields as structured input, even if some values are technically passed as list[str].
 
@@ -392,6 +412,10 @@ Do not include any text before or after the JSON.
 The JSON must match this structure exactly:
 
 {model_schema_as_json(QuestionMarking)}
+
+Example JSON:
+
+{model_prompt_example_as_json(QuestionMarking)}
 
 IMPORTANT RULES
 
