@@ -9,6 +9,7 @@ focus set was the three meaningless labels.
 import pytest
 
 from src.application.exercise_selection import weak_areas
+from src.application.services.progress import build_drill_progress_update
 from src.domain.enums import (
     DifficultyLevels,
     ExerciseTypes,
@@ -17,17 +18,56 @@ from src.domain.enums import (
     Topics,
     is_category_sentinel,
 )
-from src.domain.models.exercise import AreasOfFocus
+from src.domain.models.exercise import AreasOfFocus, ExerciseConfig, ExerciseContext
 from src.domain.models.progress import ComputeStats
 from src.domain.rules.config import DIFFICULTY_CONFIG
 from src.domain.utils import initialise_progress
+from src.infrastructure.llm.contracts.drills import MarkedDrills
 from tests.conftest import make_user
 
 TEXT_EXERCISE_TYPES = [ExerciseTypes.WRITING, ExerciseTypes.READING]
 
 
-class TestWeakAreaSelection:
+class TestAreasOfFocus:
+    def test_a_sentinel_sent_as_a_preference_is_ignored(self):
+        """A client may post any valid enum value; a sentinel is not a usable focus."""
+        focus = AreasOfFocus(
+            focus_tenses=[Tenses.TENSES, Tenses.FUTURO_SIMPLE],
+            focus_grammar=[Grammar.GRAMMAR],
+            focus_topics=[Topics.TOPICS, Topics.WORK],
+        )
 
+        assert focus.focus_tenses == [Tenses.FUTURO_SIMPLE]
+        assert focus.focus_grammar == []
+        assert focus.focus_topics == [Topics.WORK]
+
+    def test_unset_focus_stays_none(self):
+        focus = AreasOfFocus(focus_topics=[Topics.SCHOOL])
+
+        assert focus.focus_tenses is None
+        assert focus.focus_grammar is None
+        assert focus.focus_topics == [Topics.SCHOOL]
+
+    def test_drill_scoring_survives_a_sentinel_preference(self):
+        """Progress holds no sentinel, so one reaching a score lookup would raise."""
+        context = ExerciseContext(
+            areas_of_focus=AreasOfFocus(focus_tenses=[Tenses.TENSES, Tenses.FUTURO_SIMPLE]),
+            exercise_config=ExerciseConfig(
+                difficulty=DifficultyLevels.BEGINNER, word_count=0
+            ),
+        )
+        feedback = MarkedDrills(
+            marked_drill_sets=[], stats=ComputeStats(total_attempts=4, correct_attempts=3)
+        )
+
+        score = build_drill_progress_update(context, feedback)
+
+        assert score.tenses[Tenses.FUTURO_SIMPLE] == ComputeStats(
+            total_attempts=4, correct_attempts=3
+        )
+
+
+class TestWeakAreaSelection:
     @pytest.mark.parametrize("difficulty", list(DifficultyLevels))
     @pytest.mark.parametrize("exercise_type", TEXT_EXERCISE_TYPES)
     def test_fresh_user_never_focuses_on_a_sentinel(self, difficulty, exercise_type):
